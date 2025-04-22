@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: dbt_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dbt_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: eo@eo.com
+      PGADMIN_DEFAULT_PASSWORD: eo123
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  dbt_data:  # Yeni volume ekleniyor

@@ -1,0 +1,361 @@
+version: 2
+
+models:
+  - name: dwd_customer_info
+    description: "Dimension table containing geographical and personal information about customers"
+    columns:
+      - name: customer_id
+        description: "Customer ID"
+        tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "Customer's first name"
+
+      - name: last_name
+        description: "Customer's last name"
+
+      - name: email
+        description: "Customer's email address"
+
+      - name: status
+        description: "Customer's active status (1 = active )"
+
+      - name: location_id
+        description: "Location ID (surrogate key)"
+
+      - name: address
+        description: "Street address"
+
+      - name: district
+        description: "District information"
+
+      - name: postal_code
+        description: "Postal code"
+
+      - name: city
+        description: "City name of the address"
+
+      - name: country
+        description: "Country name"
+
+      - name: store_id
+        description: "Store ID associated with the customer"
+
+      - name: create_date
+        description: "Date the customer record was first created"
+
+      - name: latest_update
+        description: "Timestamp of the most recent update for this record (latest info from all sources)"
+
+      - name: last_etl_date
+        description: "Timestamp when this record was last processed in the ETL process"
+
+  - name: dwd_film_info
+    description: "Dimension table containing film details, categories, and actors"
+    columns:
+      - name: film_id
+        description: "Film ID"
+        tests:
+          - not_null
+          - unique
+
+      - name: film_name
+        description: "Film title"
+
+      - name: description
+        description: "Film description"
+
+      - name: release_year
+        description: "Release year"
+
+      - name: language_id
+        description: "Language ID"
+
+      - name: language
+        description: "Language of the film"
+
+      - name: rental_duration
+        description: "Rental duration (days)"
+
+      - name: rental_rate
+        description: "Rental fee"
+
+      - name: length
+        description: "Film length"
+
+      - name: replacement_cost
+        description: "Replacement cost"
+
+      - name: special_features
+        description: "Special features"
+
+      - name: rating
+        description: "Film rating"
+
+      - name: latest_update
+        description: "Timestamp of the most recent update among all related data"
+
+      - name: last_etl_date
+        description: "Timestamp when this record was last processed in the ETL process"
+
+  - name: dwd_staff_info
+    description: "DWD layer model combining staff data with address, city, and country details"
+    columns:
+      - name: staff_id
+        description: "Unique identifier of the staff"
+        tests:
+          - not_null
+          - unique
+
+      - name: first_name
+        description: "Staff's first name"
+
+      - name: last_name
+        description: "Staff's last name"
+
+      - name: email
+        description: "Staff's email address"
+
+      - name: store_id
+        description: "Store ID where the staff works"
+
+      - name: status
+        description: "Staff's active status "
+
+      - name: location_id
+        description: "Location ID (surrogate key)"
+
+      - name: address
+        description: "Street address"
+
+      - name: district
+        description: "District information"
+
+      - name: postal_code
+        description: "Postal code"
+
+      - name: city
+        description: "City name"
+
+      - name: country
+        description: "Country name"
+
+      - name: latest_update
+        description: "Timestamp of the most recent update among all related records"
+
+      - name: last_etl_date
+        description: "Timestamp when this record was last processed in the ETL process"
+
+  - name: dwd_store_info
+    description: "Dimension table combining store information with manager, address, city, and country details."
+    columns:
+      - name: store_id
+        description: "Unique identifier of the store"
+        tests:
+          - not_null
+          - unique
+
+      - name: staff_id
+        description: "Staff ID of the store manager"
+
+      - name: manager_name
+        description: "Manager first name"
+
+      - name: manager_surname
+        description: "Manager last name"
+
+      - name: email
+        description: "Manager email"
+        
+      - name: location_id
+        description: "Location ID (surrogate key)"
+
+      - name: address
+        description: "Street address of the store"
+
+      - name: district
+        description: "District or neighborhood of the store"
+
+      - name: postal_code
+        description: "Postal code of the store's address"
+
+      - name: city
+        description: "Name of the city"
+
+      - name: country
+        description: "Name of the country"
+
+      - name: latest_update
+        description: "The most recent update timestamp among all related sources"
+
+      - name: last_etl_date
+        description: "The timestamp when this record was last processed in the ETL pipeline"
+
+
+  - name: dwd_location_info
+    description: "Dimension table containing geographical location information (address, city, country), linked via a stable surrogate key."
+    columns:
+      - name: location_id
+        description: "Stable surrogate key for the location, derived from the address_id."
+        tests:
+          - not_null
+          - unique # location_id artık kararlı ve benzersiz olmalı
+
+      - name: address_id
+        description: "Original identifier for the address from the staging layer (Foreign Key)."
+        tests:
+          - not_null # Adres ID'si genellikle boş olmamalıdır.
+
+      - name: address
+        description: "Street address of the location."
+
+      - name: district
+        description: "District or region information for the address."
+
+      - name: postal_code
+        description: "Postal or ZIP code of the address."
+
+      - name: city_id
+        description: "Identifier of the city associated with the address (Foreign Key)."
+
+      - name: city
+        description: "Name of the city."
+
+      - name: country_id
+        description: "Identifier of the country associated with the city (Foreign Key)."
+
+      - name: country
+        description: "Name of the country."
+
+      - name: latest_update
+        description: "Timestamp of the most recent update across all constituent source records (address, city, country)."
+
+      - name: last_etl_date
+        description: "Timestamp of the most recent ETL process that loaded this record."
+
+
+  - name: dwd_date
+    description: "Date dimension table containing various date-related attributes for time-based analysis."
+    columns:
+      - name: date_key
+        description: "Primary key of the date dimension (the date itself)."
+        tests:
+          - not_null
+          - unique
+
+      - name: day_of_month
+        description: "Day number within the month (1-31)."
+
+      - name: month_number
+        description: "Month number (1 for January, 12 for December)."
+
+      - name: month_name
+        description: "Full name of the month (e.g., 'January')."
+
+      - name: quarter_number
+        description: "Quarter number (1-4)."
+
+      - name: year_number
+        description: "Full year number (e.g., 2023)."
+
+      - name: day_name
+        description: "Full name of the day of the week (e.g., 'Monday')."
+
+      - name: day_of_week
+        description: "Day number within the week (ISO standard: 1 for Monday, 7 for Sunday)."
+
+      - name: is_weekend
+        description: "Boolean indicating if the date is a weekend (true) or not (false)."
+
+      - name: prior_date_key
+        description: "Date of the previous day (can be used as a Foreign Key to this dimension)."
+
+      - name: next_date_key
+        description: "Date of the next day (can be used as a Foreign Key to this dimension)."
+
+      
+  - name: dwd_film_category_bridge
+    description: "Bridge table representing many-to-many relationships between films and categories"
+    columns:
+      - name: film_id
+        description: "Foreign key to film dimension"
+        tests:
+          - not_null
+
+      - name: category_id
+        description: "Foreign key to category dimension"
+        tests:
+          - not_null
+
+      - name: category
+        description: "Name of the category"
+
+      - name: latest_update
+        description: "Most recent update timestamp from the source tables"
+
+      - name: last_etl_date
+        description: "ETL process date for the record"
+
+
+  - name: dwd_film_actor_bridge
+    description: "Bridge table representing many-to-many relationships between films and actors"
+    columns:
+      - name: film_id
+        description: "Foreign key to film dimension"
+        tests:
+          - not_null
+
+      - name: actor_id
+        description: "Foreign key to actor dimension"
+        tests:
+          - not_null
+
+      - name: actor_name
+        description: "Actor's first name"
+
+      - name: actor_surname
+        description: "Actor's last name"
+
+      - name: latest_update
+        description: "Most recent update timestamp from the source tables"
+
+      - name: last_etl_date
+        description: "ETL process date for the record"
+
+
+  - name: dwd_inventory
+    description: >
+      Bridge-like table that connects inventory items with their related film and store. 
+      Serves as a reusable source for fact tables or semantic layer models.
+    columns:
+      - name: inventory_id
+        description: Primary key of the inventory item.
+        tests:
+          - unique
+          - not_null
+
+      - name: film_id
+        description: Foreign key referencing the film.
+        tests:
+          - not_null
+
+      - name: store_id
+        description: Foreign key referencing the store.
+        tests:
+          - not_null
+
+      - name: latest_update
+        description: Most recent update timestamp from source.
+        tests: 
+          - not_null
+
+      - name: last_etl_date
+        description: Most recent ETL load date.
+        tests: 
+          - not_null
+
+
+
+

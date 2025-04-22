@@ -1,0 +1,29 @@
+name: 'dbt_proj'
+version: '1.0.0'
+
+profile: 'dbt_proj'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_proj: 
+    +schema: public  
+    stg:
+      +schema: stg
+    dwd:
+      +schema: dwd
+    dwf:
+      +schema: dwf
+    sem:
+      +schema: sem
+    mart:
+      +schema: mart

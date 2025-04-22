@@ -1,0 +1,3 @@
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 1.1.1  # dbt v1.9 ile uyumlu son sürümü kullan
