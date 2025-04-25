@@ -1,0 +1,164 @@
+version: 2
+
+models:
+  - name: sem_customer_behavior
+    description: "Analysis model for customer rental and payment behavior"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for the customer"
+        tests:
+          - unique
+          - not_null
+      - name: payment_customer_id
+        description: "Unique identifier for the customer from payment" 
+      - name: total_rentals
+        description: "Total number of rentals made by the customer"
+        tests:
+          - not_null
+      - name: total_returned
+        description: "Total number of films returned by the customer"
+        tests:
+          - not_null
+      - name: rented_and_not_returned
+        description: "Total number of films rented but not returned"
+        tests:
+          - not_null
+      - name: max_rental_duration
+        description: "Maximum rental duration (in days) for the films rented by the customer"
+        tests:
+          - not_null
+      - name: customer_critics
+        description: "Customer's rental duration evaluation ('overdue' or 'on_time')"
+        tests:
+          - not_null
+      - name: total_overdue
+        description: "Total number of rentals that lasted more than 15 days"
+        tests:
+          - not_null
+      - name: small_payment_count
+        description: "Number of payments made in the 'SMALL' enhancement category"
+        tests:
+          - not_null
+      - name: medium_payment_count
+        description: "Number of payments made in the 'MEDIUM' enhancement category"
+        tests:
+          - not_null
+      - name: large_payment_count
+        description: "Number of payments made in the 'LARGE' enhancement category"
+        tests:
+          - not_null
+      - name: total_payment
+        description: "Total number of payments made by the customer"
+        tests:
+          - not_null
+      - name: unpaid_quantity
+        description: "Number of unpaid rentals"
+        tests:
+          - not_null
+      - name: small_total_amount
+        description: "Total amount of payments made in the 'SMALL' enhancement category"
+        tests:
+          - not_null
+      - name: medium_total_amount
+        description: "Total amount of payments made in the 'MEDIUM' enhancement category"
+        tests:
+          - not_null
+      - name: large_total_amount
+        description: "Total amount of payments made in the 'LARGE' enhancement category"
+        tests:
+          - not_null
+      - name: total_payment_amount
+        description: "Total payment amount made by the customer"
+        tests:
+          - not_null
+      - name: total_overdue_with_unpaid
+        description: "Sum of unpaid rentals and overdue rentals (more than 15 days)"
+        tests:
+          - not_null
+      - name: payment_status
+        description: "Indicator if the payment is late (1 = late, 0 = on time)."
+      - name: max_payment_date
+        description: "Date of the most recent payment"
+        tests:
+          - not_null
+      - name: latest_update
+        description: "Date when the record was last updated"
+        tests:
+          - not_null
+      - name: last_etl_date
+        description: "Date when the last ETL process was executed"
+        tests:
+          - not_null
+
+
+  - name: sem_film_popularity
+    description: >
+      This model analyzes film popularity. It includes metrics such as total inventory count, rented inventory count, 
+      returned inventory count, unrented inventory, rental duration, and more. Additionally, it calculates the popularity score 
+      and the most recent update timestamps.
+    columns:
+      - name: film_id
+        description: "Unique identifier for the film."
+        tests:
+          - unique
+          - not_null
+      - name: total_inventory
+        description: "Total inventory count (number of inventory items available for the film)."
+      - name: rented_inventory
+        description: "Number of inventory items rented."
+      - name: returned_inventory
+        description: "Number of inventory items returned."
+      - name: rented_and_not_returned
+        description: "Number of inventory items rented but not returned."
+      - name: unrented_inventory
+        description: "Number of unrented inventory copies."
+      - name: avg_rental_duration
+        description: "Average rental duration (in days)."
+      - name: rental_critics
+        description: "Rental duration evaluation: short, average, long, or overdue."
+      - name: total_revenue
+        description: "Total revenue (sum of amounts paid per rental)."
+      - name: popularity_score
+        description: "Film popularity score, the ratio of rented inventory to total inventory."
+      - name: latest_update
+        description: "Most recent update timestamp, combining rental, payment, and inventory update times."
+      - name: last_etl_date
+        description: "Timestamp of the last ETL process for the data."
+
+   
+  - name: sem_staff_performance
+    description: "Semantic model that combines staff-based payment and rental performance metrics."
+    columns:
+      - name: staff_id
+        description: "Unique identifier of the staff member."
+        tests:
+          - unique
+          - not_null
+
+      - name: total_payments
+        description: "Total number of payment transactions processed by the staff member."
+
+      - name: small_scale
+        description: "Number of SMALL-sized payments handled by the staff member."
+
+      - name: medium_scale
+        description: "Number of MEDIUM-sized payments handled by the staff member."
+
+      - name: large_scale
+        description: "Number of LARGE-sized payments handled by the staff member."
+
+      - name: total_payment_amount
+        description: "Total amount of payments collected by the staff member."
+
+      - name: total_rentals
+        description: "Total number of rentals processed by the staff member."
+
+      - name: unique_customers
+        description: "Number of unique customers served by the staff member."
+
+      - name: last_activity_date
+        description: "Most recent date of either a payment or rental activity for the staff member."
+
+      - name: last_etl_date
+        description: "The most recent ETL processing date for the data."
+

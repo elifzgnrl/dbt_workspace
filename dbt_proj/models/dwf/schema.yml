@@ -1,0 +1,92 @@
+version: 2
+
+models:
+  - name: dwf_rental
+    description: >
+      This fact table records each rental transaction made by customers.
+      It contains references to customer, inventory, and staff dimensions.
+    columns:
+      - name: rental_id
+        description: Unique identifier for each rental.
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: Foreign key to the customer who made the rental.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dwd_customer_info')
+              field: customer_id
+
+      - name: inventory_id
+        description: Foreign key to the inventory item being rented.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dwd_inventory_info')
+              field: inventory_id
+
+      - name: staff_id
+        description: Staff who handled the rental transaction.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dwd_staff_info')
+              field: staff_id
+
+      - name: rental_date
+        description: Date and time the rental started.
+        tests:
+          - not_null
+
+      - name: return_date
+        description: Date and time the rental was returned.
+
+      - name: rental_duration_days
+        description: Number of days between rental and return.
+
+      - name: is_returned
+        description: 1 if the film was returned, 0 if not.
+
+      - name: latest_update
+        description: Last time the record was updated.
+
+      - name: last_etl_date
+        description: ETL process date.
+
+
+  - name: dwf_payment
+    description: "Fact table for payment transactions, including payment details and customer/staff information."
+    columns:
+      - name: payment_id
+        description: "Unique identifier for each payment."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "The ID of the customer making the payment."
+
+      - name: staff_id
+        description: "The ID of the staff member who processed the payment."
+
+      - name: rental_id
+        description: "The rental transaction associated with the payment."
+
+      - name: amount
+        description: "The amount paid in the transaction."
+
+      - name: enhancement
+        description: "Category based on payment amount (SMALL, MEDIUM, LARGE)."
+
+      - name: payment_date
+        description: "The date and time the payment was made."
+
+      - name: payment_status
+        description: "Indicator if the payment is late (1 = late, 0 = on time)."
+
+        
+      - name: last_etl_date
+        description: "The date the record was processed in the ETL pipeline."
+

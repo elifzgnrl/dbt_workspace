@@ -25,5 +25,3 @@ models:
       +schema: dwf
     sem:
       +schema: sem
-    mart:
-      +schema: mart
