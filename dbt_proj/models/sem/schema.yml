@@ -125,7 +125,7 @@ models:
       - name: last_etl_date
         description: "Timestamp of the last ETL process for the data."
 
-   
+
   - name: sem_staff_performance
     description: "Semantic model that combines staff-based payment and rental performance metrics."
     columns:
@@ -161,4 +161,128 @@ models:
 
       - name: last_etl_date
         description: "The most recent ETL processing date for the data."
+
+
+  - name: sem_payment_summary
+    description: "Customer and staff payment summary with total amount and payment history."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for each customer."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_full_name
+        description: "Full name of the customer (first + last name)."
+
+      - name: email
+        description: "Email address of the customer."
+
+      - name: staff_id
+        description: "Unique identifier for each staff who handled the payment."
+
+      - name: staff_full_name
+        description: "Full name of the staff (first + last name)."
+
+      - name: total_payment_amount
+        description: "Total amount paid by the customer."
+
+      - name: total_payment
+        description: "Number of payments made by the customer."
+
+      - name: first_payment_date
+        description: "Date of the first payment."
+
+      - name: last_payment_date
+        description: "Date of the last payment."
+
+      - name: latest_update
+        description: "Timestamp of the last update for the customer record."
+
+      - name: last_etl_date
+        description: "The latest ETL load date between customer and payment data."
+        tests:
+          - not_null
+
+
+  - name: sem_rental_activity
+    description: |
+      This model provides a summary of rental activities. 
+      It combines customer, staff, and film information, and calculates the total payment amount and rental count for each rental.
+    columns:
+      - name: rental_id
+        description: "Rental ID"
+        tests:
+          - unique
+          - not_null
+      - name: rental_date
+        description: "Rental date"
+        tests:
+          - not_null
+      - name: return_date
+        description: "Return date"
+        tests:
+          - not_null
+      - name: customer_full_name
+        description: "Customer's full name"
+      - name: staff_full_name
+        description: "Staff's full name"
+      - name: total_payment_amount
+        description: "Total payment amount"
+        tests:
+          - not_null
+      - name: total_rental
+        description: "Rental count"
+        tests:
+          - not_null
+      - name: film_id
+        description: "Film ID"
+        tests:
+          - not_null
+      - name: film_name
+        description: "Film title"
+      - name: latest_update
+        description: "Latest update date"
+      - name: last_etl_date
+        description: "Last ETL process date"
+        tests:
+          - not_null
+
+
+  - name: sem_inventory_status
+    description: |
+      This model provides the status of inventory, including the total number of inventory items,
+      the availability status, and the film title.
+    columns:
+      - name: inventory_id
+        description: Unique identifier for the inventory record.
+        tests:
+          - unique
+          - not_null
+      - name: film_name
+        description: Title of the film associated with the inventory item.
+        tests:
+          - not_null
+      - name: store_id
+        description: Identifier for the store where the inventory is located.
+        tests:
+          - not_null
+      - name: total_inventory
+        description: Total number of inventory items available for a given film.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["0", "1", "2", "3", "4", "5"]
+      - name: inventory_status
+        description: Availability status of the inventory item, either 'Available' or 'Not Available'.
+        tests:
+          - not_null
+      - name: latest_update
+        description: The most recent update date for this inventory record.
+        tests:
+          - not_null
+      - name: last_etl_date
+        description: The last ETL date when this data was extracted.
+        tests:
+          - not_null
 

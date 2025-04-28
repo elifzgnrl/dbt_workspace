@@ -1,0 +1,137 @@
+version: 2
+
+models:
+  - name: sem_payment_summary_last_30_days
+    description: "This model contains payment summary for customers in the last 30 days."
+    columns:
+      - name: customer_id
+        description: "The unique identifier for the customer."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_full_name
+        description: "The full name of the customer."
+        tests:
+          - not_null
+
+      - name: email
+        description: "The email address of the customer."
+        tests:
+          - not_null
+          - unique
+
+      - name: staff_id
+        description: "The unique identifier for the staff."
+        tests:
+          - not_null
+
+      - name: staff_full_name
+        description: "The full name of the staff member."
+        tests:
+          - not_null
+
+      - name: total_payment_amount
+        description: "The total payment amount for the customer."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+
+      - name: total_payment
+        description: "The total number of payments made by the customer."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+
+      - name: first_payment_date
+        description: "The first payment date for the customer."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: "current_date - interval '30 day'"
+              max_value: "current_date"
+
+      - name: last_payment_date
+        description: "The last payment date for the customer."
+        tests:
+          - not_null
+
+      - name: latest_update
+        description: "The latest update timestamp for the payment activity."
+        tests:
+          - not_null
+
+      - name: last_etl_date
+        description: "The last ETL update timestamp."
+        tests:
+          - not_null
+
+
+
+
+  - name: sem_rental_activity_last_15_days
+    description: "This model contains rental activity data for the last 15 days."
+    columns:
+      - name: rental_id
+        description: "The unique identifier for the rental."
+        tests:
+          - not_null
+          - unique
+
+      - name: rental_date
+        description: "The date the rental was made."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: "current_date - interval '15 day'"
+              max_value: "current_date"
+      - name: return_date
+        description: "The date the rental was returned."
+        tests:
+          - not_null
+
+      - name: customer_full_name
+        description: "The full name of the customer."
+        tests:
+          - not_null
+
+      - name: staff_full_name
+        description: "The full name of the staff member."
+        tests:
+          - not_null
+
+      - name: total_payment_amount
+        description: "The total payment amount for the rental."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+
+      - name: total_rental
+        description: "The total number of rentals for the customer."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 1
+
+      - name: film_id
+        description: "The unique identifier for the film rented."
+        tests:
+          - not_null
+
+      - name: film_name
+        description: "The name of the rented film."
+        tests:
+          - not_null
+
+      - name: latest_update
+        description: "The latest update timestamp for the rental activity."
+        tests:
+          - not_null
+
+      - name: last_etl_date
+        description: "The last ETL update timestamp."
+        tests:
+          - not_null
