@@ -27,4 +27,4 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
-  dbt_data:  # Yeni volume ekleniyor
+  dbt_data:  
