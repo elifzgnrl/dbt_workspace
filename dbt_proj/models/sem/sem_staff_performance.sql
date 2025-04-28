@@ -5,7 +5,18 @@
     ) 
 }}
 
-with payment_data as (
+with rental_data as (
+    select
+        staff_id,
+        count(rental_id) as total_rentals,
+        count(distinct customer_id) as unique_customers,
+        max(latest_update) as latest_rental_update,
+        max(last_etl_date) as last_etl_date
+    from {{ ref('dwf_rental') }}
+    group by staff_id
+),
+
+payment_data as (
     select
         staff_id,
         count(payment_id) as total_payments,
@@ -19,31 +30,21 @@ with payment_data as (
     group by staff_id
 ),
 
-rental_data as (
-    select
-        staff_id,
-        count(rental_id) as total_rentals,
-        count(distinct customer_id) as unique_customers,
-        max(latest_update) as latest_rental_update,
-        max(last_etl_date) as last_etl_date
-    from {{ ref('dwf_rental') }}
-    group by staff_id
-),
-
 final as (
     select
         coalesce(p.staff_id, r.staff_id) as staff_id,
-        coalesce(p.total_payments, 0) as total_payments,
-        coalesce(p.small_scale, 0) as small_scale,
-        coalesce(p.medium_scale, 0) as medium_scale,
-        coalesce(p.large_scale, 0) as large_scale,
-        coalesce(p.total_payment_amount, 0) as total_payment_amount,
-        coalesce(r.total_rentals, 0) as total_rentals,
-        coalesce(r.unique_customers, 0) as unique_customers,
-        greatest(coalesce(p.last_payment_date, '1900-01-01'), coalesce(r.latest_rental_update, '1900-01-01')) as last_activity_date,
+        p.total_payments total_payments,
+        p.small_scale small_scale,
+        p.medium_scale medium_scale,
+        p.large_scale large_scale,
+        p.total_payment_amount total_payment_amount,
+        r.total_rentals total_rentals,
+        r.unique_customers unique_customers,
+        p.last_payment_date,
+        greatest(p.last_payment_date, r.latest_rental_update) latest_update,
         greatest(p.last_etl_date, r.last_etl_date) as last_etl_date
-    from payment_data p
-    full outer join rental_data r on p.staff_id = r.staff_id
+    from  rental_data r
+    left join payment_data p on r.staff_id = p.staff_id
 )
 
 select * from final
