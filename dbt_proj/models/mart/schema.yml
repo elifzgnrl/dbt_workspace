@@ -135,3 +135,36 @@ models:
         description: "The last ETL update timestamp."
         tests:
           - not_null
+
+
+  - name: sem_inventory_status_last_30_days
+    description: "Inventory items whose latest update is within the last 30 days."
+    columns:
+      - name: inventory_id
+        description: "Unique identifier for each inventory item."
+        tests:
+          - not_null
+          - unique
+
+      - name: film_name
+        description: "Name of the film associated with the inventory item."
+
+      - name: store_id
+        description: "ID of the store where the inventory item is located."
+
+      - name: total_inventory
+        description: "Total count of inventory items available."
+
+      - name: inventory_status
+        description: "Status of the inventory (e.g., available, rented)."
+
+      - name: latest_update
+        description: "Timestamp of the last update for the inventory item."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: "current_date - interval '30 day'"
+              max_value: "current_date"
+
+      - name: last_etl_date
+        description: "Timestamp when the data was last loaded into the warehouse."
